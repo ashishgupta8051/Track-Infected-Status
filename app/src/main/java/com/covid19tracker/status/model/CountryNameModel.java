@@ -1,4 +1,4 @@
-package com.covid19.tracker.model;
+package com.covid19tracker.status.model;
 
 public class CountryNameModel {
     private String flag,country,cases,todayCases,deaths,todayDeaths,recovered,todayRecovered,active,critical,tests,population;

@@ -1,7 +1,7 @@
-package com.covid19.tracker.apiclient;
+package com.covid19tracker.status.apiclient;
 
-import com.covid19.tracker.utils.Credentials;
-import com.covid19.tracker.utils.DataInterface;
+import com.covid19tracker.status.utils.Credentials;
+import com.covid19tracker.status.utils.DataInterface;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
