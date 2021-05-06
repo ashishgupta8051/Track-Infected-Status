@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.covid19tracker.status">
+    package="com.covidtracker.status">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,11 +11,11 @@
         android:roundIcon="@mipmap/app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Covid19Tracker">
-        <activity android:name="com.covid19tracker.status.StateCovidInformation" />
-        <activity android:name="com.covid19tracker.status.AffectedStates" />
-        <activity android:name="com.covid19tracker.status.CountryCovidInformation" />
-        <activity android:name="com.covid19tracker.status.AffectedCountry" />
-        <activity android:name="com.covid19tracker.status.MainActivity">
+        <activity android:name="com.covidtracker.status.StateCovidInformation" />
+        <activity android:name="com.covidtracker.status.AffectedStates" />
+        <activity android:name="com.covidtracker.status.CountryCovidInformation" />
+        <activity android:name="com.covidtracker.status.AffectedCountry" />
+        <activity android:name="com.covidtracker.status.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

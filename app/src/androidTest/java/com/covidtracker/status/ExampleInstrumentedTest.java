@@ -1,4 +1,4 @@
-package com.covid19tracker.status;
+package com.covidtracker.status;
 
 import android.content.Context;
 

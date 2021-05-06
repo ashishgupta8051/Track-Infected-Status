@@ -1,4 +1,4 @@
-package com.covid19tracker.status;
+package com.covidtracker.status;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -14,10 +14,10 @@ import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.covid19tracker.status.adapter.AffectedStateAdapter;
-import com.covid19tracker.status.apiclient.APIClient;
-import com.covid19tracker.status.response.StateResponse;
-import com.covid19tracker.status.model.StateName;
+import com.covidtracker.status.adapter.AffectedStateAdapter;
+import com.covidtracker.status.apiclient.APIClient;
+import com.covidtracker.status.response.StateResponse;
+import com.covidtracker.status.model.StateName;
 import com.leo.simplearcloader.SimpleArcLoader;
 
 import java.util.ArrayList;

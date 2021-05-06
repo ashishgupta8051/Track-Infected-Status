@@ -1,4 +1,4 @@
-package com.covid19tracker.status;
+package com.covidtracker.status;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +19,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.covid19tracker.status.adapter.AffectedCountryAdapter;
-import com.covid19tracker.status.model.CountryNameModel;
+import com.covidtracker.status.adapter.AffectedCountryAdapter;
+import com.covidtracker.status.model.CountryNameModel;
 import com.leo.simplearcloader.SimpleArcLoader;
 
 import org.json.JSONArray;
