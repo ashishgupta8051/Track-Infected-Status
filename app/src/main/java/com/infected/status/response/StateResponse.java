@@ -1,6 +1,6 @@
-package com.covidtracker.status.response;
+package com.infected.status.response;
 
-import com.covidtracker.status.model.StateName;
+import com.infected.status.model.StateName;
 
 public class StateResponse {
 

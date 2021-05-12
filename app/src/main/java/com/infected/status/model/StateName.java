@@ -1,4 +1,4 @@
-package com.covidtracker.status.model;
+package com.infected.status.model;
 
 public class StateName {
 

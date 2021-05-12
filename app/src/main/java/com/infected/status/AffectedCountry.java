@@ -1,4 +1,4 @@
-package com.covidtracker.status;
+package com.infected.status;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -19,9 +20,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.covidtracker.status.adapter.AffectedCountryAdapter;
-import com.covidtracker.status.model.CountryNameModel;
-import com.leo.simplearcloader.SimpleArcLoader;
+import com.infected.status.adapter.AffectedCountryAdapter;
+import com.infected.status.model.CountryNameModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 public class AffectedCountry extends AppCompatActivity {
     private String Value;
-    private SimpleArcLoader simpleArcLoader;
+    private ProgressBar simpleArcLoader;
     private RecyclerView recyclerView;
     public static ArrayList<CountryNameModel> countryNameModelArrayList = new ArrayList<>();
     private AffectedCountryAdapter affectedCountryAdapter;
@@ -59,7 +59,6 @@ public class AffectedCountry extends AppCompatActivity {
 
     private void fetchData() {
         String url = "https://disease.sh/v3/covid-19/countries/";
-        simpleArcLoader.start();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -90,11 +89,9 @@ public class AffectedCountry extends AppCompatActivity {
                     }
                     affectedCountryAdapter = new AffectedCountryAdapter(countryNameModelArrayList,AffectedCountry.this,Value);
                     recyclerView.setAdapter(affectedCountryAdapter);
-                    simpleArcLoader.stop();
                     simpleArcLoader.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    simpleArcLoader.stop();
                     simpleArcLoader.setVisibility(View.GONE);
                 }
             }
@@ -102,7 +99,6 @@ public class AffectedCountry extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(AffectedCountry.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                simpleArcLoader.stop();
                 simpleArcLoader.setVisibility(View.GONE);
             }
         });

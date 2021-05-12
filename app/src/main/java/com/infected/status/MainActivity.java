@@ -1,4 +1,4 @@
-package com.covidtracker.status;
+package com.infected.status;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.leo.simplearcloader.SimpleArcLoader;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
@@ -27,7 +27,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     private TextView updatedTxt,casesTxt,todayCaseTxt,deathTxt,todayDeathTxt,recoverTxt,todayRecoverTxt,activeTxt,criticalTxt,testsTxt,populationTxt,affectedCountryTxt;
-    private SimpleArcLoader simpleArcLoader;
+    private ProgressBar simpleArcLoader;
     private PieChart pieChart;
     private Button tractCountryBtn,indiaStatusBtn;
     private LinearLayout linearLayout;
@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchData() {
         String url = "https://corona.lmao.ninja/v2/all/";
-        simpleArcLoader.start();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -111,13 +110,11 @@ public class MainActivity extends AppCompatActivity {
                     pieChart.addPieSlice(new PieModel("Active",Integer.parseInt(activeTxt.getText().toString()), Color.parseColor("#87CEEB")));
                     pieChart.startAnimation();
 
-                    simpleArcLoader.stop();
                     simpleArcLoader.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.VISIBLE);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    simpleArcLoader.stop();
                     simpleArcLoader.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.VISIBLE);
                 }
@@ -126,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                simpleArcLoader.stop();
                 simpleArcLoader.setVisibility(View.GONE);
                 Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }

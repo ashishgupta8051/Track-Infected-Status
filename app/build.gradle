@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.covidtracker.status"
+        applicationId "com.infected.status"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 2
@@ -48,9 +48,6 @@ dependencies {
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-
-    //loader
-    implementation 'com.leo.simplearcloader:simplearcloader:1.0.+'
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'

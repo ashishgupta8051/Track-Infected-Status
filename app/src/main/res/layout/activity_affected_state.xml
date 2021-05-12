@@ -13,12 +13,12 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/state_list"/>
 
-    <com.leo.simplearcloader.SimpleArcLoader
+    <ProgressBar
         android:id="@+id/loader3"
         android:layout_centerInParent="true"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        app:arc_style="simple_arc"/>
+        android:indeterminateTint="@color/colorPrimary"/>
 
 
 </RelativeLayout>

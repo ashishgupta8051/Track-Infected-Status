@@ -1,6 +1,6 @@
-package com.covidtracker.status.utils;
+package com.infected.status.utils;
 
-import com.covidtracker.status.response.StateResponse;
+import com.infected.status.response.StateResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

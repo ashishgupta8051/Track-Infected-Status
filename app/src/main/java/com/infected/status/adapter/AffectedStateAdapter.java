@@ -1,4 +1,4 @@
-package com.covidtracker.status.adapter;
+package com.infected.status.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,9 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.covidtracker.status.R;
-import com.covidtracker.status.StateCovidInformation;
-import com.covidtracker.status.model.StateName;
+import com.infected.status.R;
+import com.infected.status.StateCovidInformation;
+import com.infected.status.model.StateName;
 
 import java.util.ArrayList;
 

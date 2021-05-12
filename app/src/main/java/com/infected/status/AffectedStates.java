@@ -1,4 +1,4 @@
-package com.covidtracker.status;
+package com.infected.status;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -11,14 +11,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.covidtracker.status.adapter.AffectedStateAdapter;
-import com.covidtracker.status.apiclient.APIClient;
-import com.covidtracker.status.response.StateResponse;
-import com.covidtracker.status.model.StateName;
-import com.leo.simplearcloader.SimpleArcLoader;
+import com.infected.status.adapter.AffectedStateAdapter;
+import com.infected.status.apiclient.APIClient;
+import com.infected.status.response.StateResponse;
+import com.infected.status.model.StateName;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ import retrofit2.Response;
 import static android.view.View.GONE;
 
 public class AffectedStates extends AppCompatActivity {
-    private SimpleArcLoader simpleArcLoader;
+    private ProgressBar simpleArcLoader;
     private RecyclerView recyclerView;
     private ArrayList<StateName> arrayList;
     private AffectedStateAdapter affectedStateAdapter;
@@ -58,7 +58,6 @@ public class AffectedStates extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void getData() {
-        simpleArcLoader.start();
        /* DataInterface dataInterface = null;
         dataInterface = APIClient.getApiClient().create(DataInterface.class);
         Call<StateResponse> call = dataInterface.getStatesName();*/
@@ -68,7 +67,6 @@ public class AffectedStates extends AppCompatActivity {
         call.enqueue(new Callback<StateResponse>() {
             @Override
             public void onResponse(Call<StateResponse> call, Response<StateResponse> response) {
-                simpleArcLoader.stop();
                 simpleArcLoader.setVisibility(GONE);
                 StateResponse stateResponse = response.body();
                 arrayList = new ArrayList<>(Arrays.asList(stateResponse.getStatewise()));
@@ -78,7 +76,6 @@ public class AffectedStates extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<StateResponse> call, Throwable t) {
-                simpleArcLoader.stop();
                 simpleArcLoader.setVisibility(GONE);
                 Toast.makeText(AffectedStates.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }

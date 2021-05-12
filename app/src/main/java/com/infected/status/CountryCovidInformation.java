@@ -1,4 +1,4 @@
-package com.covidtracker.status;
+package com.infected.status;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
