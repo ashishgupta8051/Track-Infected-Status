@@ -1,16 +1,18 @@
 package com.infected.status.response;
 
+import com.google.gson.annotations.SerializedName;
 import com.infected.status.model.StateName;
 
 public class StateResponse {
 
-    private StateName[] statewise;
+    @SerializedName("statewise")
+    private StateName[] stateNames;
 
-    public StateName[] getStatewise() {
-        return statewise;
+    public StateName[] getStateNames() {
+        return stateNames;
     }
 
-    public void setStatewise(StateName[] statewise) {
-        this.statewise = statewise;
+    public void setStateNames(StateName[] stateNames) {
+        this.stateNames = stateNames;
     }
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -67,11 +68,15 @@ public class AffectedStates extends AppCompatActivity {
         call.enqueue(new Callback<StateResponse>() {
             @Override
             public void onResponse(Call<StateResponse> call, Response<StateResponse> response) {
-                simpleArcLoader.setVisibility(GONE);
-                StateResponse stateResponse = response.body();
-                arrayList = new ArrayList<>(Arrays.asList(stateResponse.getStatewise()));
-                affectedStateAdapter = new AffectedStateAdapter(arrayList,AffectedStates.this);
-                recyclerView.setAdapter(affectedStateAdapter);
+                if (response.isSuccessful()){
+                    simpleArcLoader.setVisibility(GONE);
+                    StateResponse stateResponse = response.body();
+                    arrayList = new ArrayList<>(Arrays.asList(stateResponse.getStateNames()));
+                    affectedStateAdapter = new AffectedStateAdapter(arrayList,AffectedStates.this);
+                    recyclerView.setAdapter(affectedStateAdapter);
+                }else {
+                    Toast.makeText(AffectedStates.this, response.message(), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
