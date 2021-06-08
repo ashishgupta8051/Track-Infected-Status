@@ -64,7 +64,6 @@ public class AffectedStates extends AppCompatActivity {
         Call<StateResponse> call = dataInterface.getStatesName();*/
 
         Call<StateResponse> call = APIClient.getApiClient().getDataInterface().getStatesName();
-
         call.enqueue(new Callback<StateResponse>() {
             @Override
             public void onResponse(Call<StateResponse> call, Response<StateResponse> response) {
