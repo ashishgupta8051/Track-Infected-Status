@@ -18,9 +18,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.infected.status.adapter.AffectedCountryAdapter;
+import com.infected.status.apiclient.MySingletonClass;
 import com.infected.status.model.CountryNameModel;
 
 import org.json.JSONArray;
@@ -59,11 +61,11 @@ public class AffectedCountry extends AppCompatActivity {
 
     private void fetchData() {
         String url = "https://disease.sh/v3/covid-19/countries/";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(JSONArray jsonArray) {
                 try {
-                    JSONArray jsonArray = new JSONArray(response);
                     countryNameModelArrayList.clear();
                     for (int i = 0; i < jsonArray.length(); i++){
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -103,8 +105,7 @@ public class AffectedCountry extends AppCompatActivity {
             }
         });
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+        MySingletonClass.getInstance(AffectedCountry.this).addToRequestQueue(jsonArrayRequest);
     }
 
     @Override

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -18,11 +17,12 @@ import android.widget.Toast;
 
 import com.infected.status.adapter.AffectedStateAdapter;
 import com.infected.status.apiclient.APIClient;
-import com.infected.status.response.StateResponse;
+import com.infected.status.response.StateWiseResponse;
 import com.infected.status.model.StateName;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +33,7 @@ import static android.view.View.GONE;
 public class AffectedStates extends AppCompatActivity {
     private ProgressBar simpleArcLoader;
     private RecyclerView recyclerView;
-    private ArrayList<StateName> arrayList;
+    private List<StateName> arrayList;
     private AffectedStateAdapter affectedStateAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -53,24 +53,18 @@ public class AffectedStates extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        //fetchDate();
         getData();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void getData() {
-       /* DataInterface dataInterface = null;
-        dataInterface = APIClient.getApiClient().create(DataInterface.class);
-        Call<StateResponse> call = dataInterface.getStatesName();*/
-
-        Call<StateResponse> call = APIClient.getApiClient().getDataInterface().getStatesName();
-        call.enqueue(new Callback<StateResponse>() {
+        Call<StateWiseResponse> call = APIClient.getApiClient().getDataInterface().getStatesName();
+        call.enqueue(new Callback<StateWiseResponse>() {
             @Override
-            public void onResponse(Call<StateResponse> call, Response<StateResponse> response) {
+            public void onResponse(Call<StateWiseResponse> call, Response<StateWiseResponse> response) {
                 if (response.isSuccessful()){
                     simpleArcLoader.setVisibility(GONE);
-                    StateResponse stateResponse = response.body();
-                    arrayList = new ArrayList<>(Arrays.asList(stateResponse.getStateNames()));
+                    arrayList = response.body().getStateNames();
                     affectedStateAdapter = new AffectedStateAdapter(arrayList,AffectedStates.this);
                     recyclerView.setAdapter(affectedStateAdapter);
                 }else {
@@ -79,56 +73,12 @@ public class AffectedStates extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<StateResponse> call, Throwable t) {
+            public void onFailure(Call<StateWiseResponse> call, Throwable t) {
                 simpleArcLoader.setVisibility(GONE);
-                Toast.makeText(AffectedStates.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AffectedStates.this, "Some thing is wrong !!!", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-    /*private void fetchDate() {
-        String URL = "https://api.covid19india.org/data.json";
-        simpleArcLoader.start();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onResponse(String response) {
-                try {
-                    arrayList.clear();
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray statewise = jsonObject.getJSONArray("statewise");
-                    for (int i = 0; i < statewise.length(); i++){
-                        JSONObject jsonObject2 = statewise.getJSONObject(i);
-                        String state;
-                        state = jsonObject2.getString("state");
-
-                        StateName stateName = new StateName(state);
-                        arrayList.add(stateName);
-                    }
-                    affectedStateAdapter = new AffectedStateAdapter(arrayList, AffectedStates.this);
-                    recyclerView.setAdapter(affectedStateAdapter);
-                    simpleArcLoader.stop();
-                    simpleArcLoader.setVisibility(View.GONE);
-                } catch (JSONException e) {
-                    simpleArcLoader.stop();
-                    simpleArcLoader.setVisibility(View.GONE);
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                simpleArcLoader.stop();
-                simpleArcLoader.setVisibility(View.GONE);
-                Toast.makeText(AffectedStates.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -16,17 +19,28 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AudienceNetworkAds;
+import com.facebook.ads.InterstitialAd;
+import com.facebook.ads.InterstitialAdListener;
+import com.google.gson.JsonObject;
+import com.infected.status.apiclient.MySingletonClass;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static android.content.ContentValues.TAG;
+
 public class MainActivity extends AppCompatActivity {
 
-    private TextView updatedTxt,casesTxt,todayCaseTxt,deathTxt,todayDeathTxt,recoverTxt,todayRecoverTxt,activeTxt,criticalTxt,testsTxt,populationTxt,affectedCountryTxt;
+    private TextView updatedTxt,casesTxt,todayCaseTxt,deathTxt,todayDeathTxt,recoverTxt,
+            todayRecoverTxt,activeTxt,criticalTxt,testsTxt,populationTxt,affectedCountryTxt;
     private ProgressBar simpleArcLoader;
     private PieChart pieChart;
     private Button tractCountryBtn,indiaStatusBtn;
@@ -85,24 +99,22 @@ public class MainActivity extends AppCompatActivity {
     private void fetchData() {
         String url = "https://corona.lmao.ninja/v2/all/";
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(JSONObject response) {
                 try {
-                    JSONObject jsonObject = new JSONObject(response);
-
-                    updatedTxt.setText(jsonObject.getString("updated"));
-                    casesTxt.setText(jsonObject.getString("cases"));
-                    todayCaseTxt.setText(jsonObject.getString("todayCases"));
-                    deathTxt.setText(jsonObject.getString("deaths"));
-                    todayDeathTxt.setText(jsonObject.getString("todayDeaths"));
-                    recoverTxt.setText(jsonObject.getString("recovered"));
-                    todayRecoverTxt.setText(jsonObject.getString("todayRecovered"));
-                    activeTxt.setText(jsonObject.getString("active"));
-                    criticalTxt.setText(jsonObject.getString("critical"));
-                    testsTxt.setText(jsonObject.getString("tests"));
-                    populationTxt.setText(jsonObject.getString("population"));
-                    affectedCountryTxt.setText(jsonObject.getString("affectedCountries"));
+                    updatedTxt.setText(response.getString("updated"));
+                    casesTxt.setText(response.getString("cases"));
+                    todayCaseTxt.setText(response.getString("todayCases"));
+                    deathTxt.setText(response.getString("deaths"));
+                    todayDeathTxt.setText(response.getString("todayDeaths"));
+                    recoverTxt.setText(response.getString("recovered"));
+                    todayRecoverTxt.setText(response.getString("todayRecovered"));
+                    activeTxt.setText(response.getString("active"));
+                    criticalTxt.setText(response.getString("critical"));
+                    testsTxt.setText(response.getString("tests"));
+                    populationTxt.setText(response.getString("population"));
+                    affectedCountryTxt.setText(response.getString("affectedCountries"));
 
                     pieChart.addPieSlice(new PieModel("Cases",Integer.parseInt(casesTxt.getText().toString()), Color.parseColor("#FFFF00")));
                     pieChart.addPieSlice(new PieModel("Recovered",Integer.parseInt(recoverTxt.getText().toString()), Color.parseColor("#008000")));
@@ -112,13 +124,11 @@ public class MainActivity extends AppCompatActivity {
 
                     simpleArcLoader.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.VISIBLE);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                }catch (Exception e){
                     simpleArcLoader.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.VISIBLE);
+                    e.printStackTrace();
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -127,9 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+        MySingletonClass.getInstance(MainActivity.this).addToRequestQueue(jsonObjectRequest);
     }
 
     @Override

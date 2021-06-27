@@ -18,13 +18,14 @@ import com.infected.status.StateCovidInformation;
 import com.infected.status.model.StateName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AffectedStateAdapter extends RecyclerView.Adapter<AffectedStateAdapter.StateHolder> implements Filterable {
-    private ArrayList<StateName> stateNameList;
-    private ArrayList<StateName> filterStateNameList;
+    private List<StateName> stateNameList;
+    private List<StateName> filterStateNameList;
     private Activity activity;
 
-    public AffectedStateAdapter(ArrayList<StateName> stateNameList,Activity activity) {
+    public AffectedStateAdapter(List<StateName> stateNameList,Activity activity) {
         this.stateNameList = stateNameList;
         filterStateNameList = stateNameList;
         this.activity = activity;
