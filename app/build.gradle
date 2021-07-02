@@ -11,8 +11,8 @@ android {
         applicationId "com.infected.status"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 8
-        versionName "8.1"
+        versionCode 10
+        versionName "10.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,6 +38,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //chart
     implementation 'com.github.blackfizz:eazegraph:1.2.5l@aar'
@@ -53,12 +55,10 @@ dependencies {
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
-    implementation "androidx.core:core-ktx:1.5.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     implementation 'org.chromium.net:cronet-embedded:76.3809.111'
 
-    implementation 'com.facebook.android:audience-network-sdk:6.5.0'
+    //Google Ads
+    implementation 'com.google.android.gms:play-services-ads:20.2.0'
 
 }
 repositories {
