@@ -47,13 +47,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="State"
+                    android:text="@string/state_txt"
                     android:textStyle="bold"
                     android:textSize="18sp"/>
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/zero_txt"
                     android:id="@+id/tvState"
                     android:textAlignment="textEnd"
                     android:textSize="18sp"
@@ -84,13 +84,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="Total Cases"
+                    android:text="@string/total_cases_txt"
                     android:textStyle="bold"
                     android:textSize="18sp"/>
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/zero_txt"
                     android:id="@+id/tvTotalCases"
                     android:textAlignment="textEnd"
                     android:textSize="18sp"
@@ -121,13 +121,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="Active Cases"
+                    android:text="@string/active_txt"
                     android:textStyle="bold"
                     android:textSize="18sp"/>
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/zero_txt"
                     android:id="@+id/tvActiveCases"
                     android:textAlignment="textEnd"
                     android:textSize="18sp"
@@ -158,13 +158,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="Death"
+                    android:text="@string/death_txt"
                     android:textStyle="bold"
                     android:textSize="18sp"/>
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/zero_txt"
                     android:id="@+id/tv_Death"
                     android:textAlignment="textEnd"
                     android:textSize="18sp"
@@ -195,13 +195,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="Recovered"
+                    android:text="@string/recovered_txt"
                     android:textStyle="bold"
                     android:textSize="18sp"/>
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/zero_txt"
                     android:id="@+id/recovered"
                     android:textAlignment="textEnd"
                     android:textSize="18sp"
@@ -232,13 +232,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:text="Last Update Time"
+                    android:text="@string/last_update_time_txt"
                     android:textStyle="bold"
                     android:textSize="18sp"/>
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/zero_txt"
                     android:id="@+id/tvUpdateTime"
                     android:maxLength="16"
                     android:textAlignment="textEnd"
@@ -305,7 +305,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Total Cases"
+                                android:text="@string/total_cases_txt"
                                 android:paddingLeft="10dp"/>
 
                         </LinearLayout>
@@ -321,7 +321,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Recovered"
+                                android:text="@string/recovered_txt"
                                 android:paddingLeft="10dp"/>
 
                         </LinearLayout>
@@ -337,7 +337,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Deaths"
+                                android:text="@string/death_txt"
                                 android:paddingLeft="10dp"/>
 
                         </LinearLayout>
@@ -353,7 +353,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Active"
+                                android:text="@string/active_txt"
                                 android:paddingLeft="10dp"/>
 
                         </LinearLayout>

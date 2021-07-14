@@ -14,7 +14,7 @@
         android:id="@+id/itemCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1."
+        android:text="@string/empty_txt"
         android:textSize="20sp"
         android:textStyle="bold"
         android:padding="15dp"/>
@@ -23,7 +23,7 @@
         android:id="@+id/stateName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="State Name"
+        android:text="@string/state_txt"
         android:layout_gravity="center_vertical"
         android:textSize="20sp"
         android:textStyle="bold"

@@ -1,3 +1,33 @@
 <resources>
+    //App name
     <string name="app_name">Track Infected Status</string>
+
+    <string name="empty_txt" />
+
+    //Main Activity
+    <string name="total_cases_txt">Total Cases</string>
+    <string name="recovered_txt">Recovered</string>
+    <string name="death_txt">Death</string>
+    <string name="active_txt">Active</string>
+    <string name="global_stats_txt">Global Stats</string>
+    <string name="updated_txt">Updated</string>
+    <string name="cases_txt">Cases</string>
+    <string name="today_cases_txt">Today Cases</string>
+    <string name="today_death_txt">Today Death</string>
+    <string name="today_recovered_txt">Today Recovered</string>
+    <string name="critical_txt">Critical</string>
+    <string name="tests_txt">Tests</string>
+    <string name="population_txt">Population</string>
+    <string name="affected_country_txt">Affected Country</string>
+    <string name="track_countries_btn">Track Countries</string>
+    <string name="india_status_btn">India Status</string>
+    <string name="zero_txt">0</string>
+
+    //Country Covid Information
+    <string name="country_txt">Country</string>
+
+    //State Covid Information
+    <string name="state_txt">State</string>
+    <string name="last_update_time_txt">Last Update Time</string>
+
 </resources>

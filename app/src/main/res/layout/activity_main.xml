@@ -63,7 +63,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Total Cases"
+                                android:text="@string/total_cases_txt"
                                 android:paddingLeft="10dp"/>
 
                         </LinearLayout>
@@ -79,7 +79,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Recovered"
+                                android:text="@string/recovered_txt"
                                 android:paddingLeft="10dp"/>
 
                         </LinearLayout>
@@ -111,7 +111,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Active"
+                                android:text="@string/active_txt"
                                 android:paddingLeft="10dp"/>
 
                         </LinearLayout>
@@ -151,7 +151,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="global stats"
+                            android:text="@string/global_stats_txt"
                             android:textAllCaps="true"
                             android:textSize="28sp"
                             android:textStyle="bold"
@@ -178,12 +178,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Updated"
+                                android:text="@string/updated_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/updated"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -214,12 +214,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Cases"
+                                android:text="@string/cases_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/cases"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -249,12 +249,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Today Cases"
+                                android:text="@string/today_cases_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/todayCases"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -284,12 +284,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Death"
+                                android:text="@string/death_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/death"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -319,12 +319,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Today Death"
+                                android:text="@string/today_death_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/todayDeath"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -354,12 +354,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Recover"
+                                android:text="@string/recovered_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/recover"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -389,12 +389,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Today Recover"
+                                android:text="@string/today_recovered_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/todayRecover"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -424,12 +424,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Active"
+                                android:text="@string/active_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/active"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -459,12 +459,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Critical"
+                                android:text="@string/critical_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/critical"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -494,12 +494,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Tests"
+                                android:text="@string/tests_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/tests"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -529,12 +529,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Population"
+                                android:text="@string/population_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/population"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -564,12 +564,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-light"
-                                android:text="Affected Country"
+                                android:text="@string/affected_country_txt"
                                 android:textSize="18sp"/>
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_txt"
                                 android:id="@+id/affectedCountry"
                                 android:textAlignment="textEnd"
                                 android:textSize="18sp"
@@ -612,7 +612,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/color_one"
-                android:text="Track countries"
+                android:text="@string/track_countries_btn"
                 android:textColor="@android:color/white"/>
 
             <Button
@@ -625,7 +625,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="15dp"
                 android:background="@color/color_one"
-                android:text="India Status"
+                android:text="@string/india_status_btn"
                 android:textColor="@android:color/white" />
 
         </RelativeLayout>

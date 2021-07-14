@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tvCountryName"
         android:layout_gravity="center_vertical"
-        android:text="Country Name"
+        android:text="@string/country_txt"
         android:textSize="20sp"
         android:textStyle="bold"
         android:paddingLeft="15dp"/>

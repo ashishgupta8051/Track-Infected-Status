@@ -21,10 +21,9 @@
             android:hardwareAccelerated="true"/>
         <activity android:name="com.infected.status.AffectedCountry"
             android:hardwareAccelerated="true"/>
+
         <activity android:name="com.infected.status.MainActivity"
             android:hardwareAccelerated="true">
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
