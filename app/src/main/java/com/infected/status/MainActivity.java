@@ -1,13 +1,20 @@
 package com.infected.status;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,26 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.infected.status.apiclient.MySingletonClass;
+import com.infected.status.utils.InternetCheckService;
 
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import static android.content.ContentValues.TAG;
@@ -49,13 +44,19 @@ public class MainActivity extends AppCompatActivity {
     private PieChart pieChart;
     private Button tractCountryBtn,indiaStatusBtn;
     private LinearLayout linearLayout;
-    private InterstitialAd mInterstitialAd;
-    private static final String AD_UNIT_ID = "ca-app-pub-7419751706380309/8917314068";
+    private ConnectivityManager connectivityManager;
+    private ConnectivityManager.NetworkCallback networkCallback;
+    private NetworkRequest networkRequest;
+    private AlertDialog alertDialog;
+    private Button retryBtn;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        broadcastReceiver = new InternetCheckService();
 
         updatedTxt = findViewById(R.id.updated);
         casesTxt = findViewById(R.id.cases);
@@ -98,21 +99,31 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        //Initialize MobileAds
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-
-        loadAd();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        //Check Internet Connection
+        checkInternetConnection(this);
+
+        //fetch Data
+        fetchData();
+
+        //Create Dialog Box
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.internet_alert_dialog,null);
+        builder.setView(view);
+
+        retryBtn = view.findViewById(R.id.retry_btn);
+
+        alertDialog = builder.setCancelable(false).create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.getWindow().getAttributes().windowAnimations = android.R.style.Animation_Toast;
+    }
+
+    private void fetchData() {
         //Fetch Data
         String url = "https://corona.lmao.ninja/v2/all/";
 
@@ -158,57 +169,60 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadAd() {
-        AdRequest adRequest = new AdRequest.Builder().build();
+    private void checkInternetConnection(final Context context) {
+        connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
 
-        InterstitialAd.load(this,AD_UNIT_ID, adRequest,
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        mInterstitialAd = interstitialAd;
+        networkRequest = new NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                .build();
 
-                        if (mInterstitialAd != null) {
-                            mInterstitialAd.show(MainActivity.this);
-                        } else {
-                            Log.d("TAG", "The interstitial ad wasn't ready yet.");
-                        }
+        networkCallback = new ConnectivityManager.NetworkCallback(){
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                super.onAvailable(network);
+                //alertDialog.dismiss();
+                Log.e(TAG,"Connected "+network.toString());
+                Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
+            }
 
-                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                            @Override
-                            public void onAdDismissedFullScreenContent() {
-                                Log.d("TAG", "The ad was dismissed.");
-                            }
+            @Override
+            public void onLost(@NonNull Network network) {
+                super.onLost(network);
+                //alertDialog.show();
+                Log.e(TAG,"Not Connected "+network.toString());
+                Toast.makeText(context, "disconnect", Toast.LENGTH_SHORT).show();
+            }
 
-                            @Override
-                            public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                Log.d("TAG", "The ad failed to show.");
-                            }
+            @Override
+            public void onUnavailable() {
+                super.onUnavailable();
+                Toast.makeText(context, "no network found", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
 
-                            @Override
-                            public void onAdShowedFullScreenContent() {
-                                mInterstitialAd = null;
-                                Log.d("TAG", "The ad was shown.");
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        Log.i(TAG, loadAdError.getMessage());
-                        mInterstitialAd = null;
-
-                        String error =
-                                String.format(
-                                        "domain: %s, code: %d, message: %s",
-                                        loadAdError.getDomain(), loadAdError.getCode(), loadAdError.getMessage());
-                        Toast.makeText(
-                                MainActivity.this, "onAdFailedToLoad() with error: " + error, Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        connectivityManager.registerNetworkCallback(networkRequest,networkCallback);
+        /*IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(broadcastReceiver,intentFilter);*/
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        connectivityManager.unregisterNetworkCallback(networkCallback);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        unregisterReceiver(broadcastReceiver);
+    }
 
     @Override
     public void onBackPressed() {

@@ -13,4 +13,8 @@
     <color name="deaths">#FF0000</color>
     <color name="active">#87CEEB</color>
 
+    <color name="wifi_background_color">#34495e</color>
+    <color name="wifi_text_color">#FFFFFF</color>
+    <color name="wifi_retry_btn">#454545</color>
+
 </resources>

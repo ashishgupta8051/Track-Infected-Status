@@ -1,11 +1,19 @@
 package com.infected.status;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,12 +23,9 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.infected.status.adapter.AffectedCountryAdapter;
 import com.infected.status.apiclient.MySingletonClass;
 import com.infected.status.model.CountryNameModel;
@@ -37,11 +42,16 @@ public class AffectedCountry extends AppCompatActivity {
     private RecyclerView recyclerView;
     public static ArrayList<CountryNameModel> countryNameModelArrayList = new ArrayList<>();
     private AffectedCountryAdapter affectedCountryAdapter;
+    private ConnectivityManager connectivityManager;
+    private ConnectivityManager.NetworkCallback networkCallback;
+    private NetworkRequest networkRequest;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_affected_country);
+
 
         getSupportActionBar().setTitle("Affected Country");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,7 +66,87 @@ public class AffectedCountry extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AffectedCountry.this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         fetchData();
+
+        //checkInternetConnection(this);
+    }
+
+    private void checkInternetConnection(final Context context) {
+        connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+
+        networkRequest = new NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .build();
+
+        networkCallback = new ConnectivityManager.NetworkCallback(){
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                super.onAvailable(network);
+                Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLost(@NonNull Network network) {
+                super.onLost(network);
+                Toast.makeText(context, "Not Connected", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //connectivityManager.registerNetworkCallback(networkRequest,networkCallback);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //connectivityManager.unregisterNetworkCallback(networkCallback);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_countries,menu);
+        MenuItem menuItem = menu.findItem(R.id.searchCountry);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Search here !!");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                affectedCountryAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                affectedCountryAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+     @Override
+    public void onBackPressed() {
+         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+         startActivity(intent);
     }
 
     private void fetchData() {
@@ -106,42 +196,5 @@ public class AffectedCountry extends AppCompatActivity {
         });
 
         MySingletonClass.getInstance(AffectedCountry.this).addToRequestQueue(jsonArrayRequest);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_countries,menu);
-        MenuItem menuItem = menu.findItem(R.id.searchCountry);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search here !!");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                affectedCountryAdapter.getFilter().filter(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                affectedCountryAdapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-     @Override
-    public void onBackPressed() {
-         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-         startActivity(intent);
     }
 }
