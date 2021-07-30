@@ -1,21 +1,16 @@
 package com.infected.status;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -34,8 +29,6 @@ import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 import org.json.JSONObject;
 
-import static android.content.ContentValues.TAG;
-
 public class MainActivity extends AppCompatActivity {
 
     private TextView updatedTxt,casesTxt,todayCaseTxt,deathTxt,todayDeathTxt,recoverTxt,
@@ -44,9 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private PieChart pieChart;
     private Button tractCountryBtn,indiaStatusBtn;
     private LinearLayout linearLayout;
-    private ConnectivityManager connectivityManager;
-    private ConnectivityManager.NetworkCallback networkCallback;
-    private NetworkRequest networkRequest;
     private AlertDialog alertDialog;
     private Button retryBtn;
     private BroadcastReceiver broadcastReceiver;
@@ -104,10 +94,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        //Check Internet Connection
-        checkInternetConnection(this);
-
         //fetch Data
         fetchData();
 
@@ -121,6 +107,27 @@ public class MainActivity extends AppCompatActivity {
         alertDialog = builder.setCancelable(false).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.getWindow().getAttributes().windowAnimations = android.R.style.Animation_Toast;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(broadcastReceiver,intentFilter);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
     }
 
     private void fetchData() {
@@ -167,65 +174,5 @@ public class MainActivity extends AppCompatActivity {
         });
         MySingletonClass.getInstance(MainActivity.this).addToRequestQueue(jsonObjectRequest);
 
-    }
-
-    private void checkInternetConnection(final Context context) {
-        connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
-
-        networkRequest = new NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-                .build();
-
-        networkCallback = new ConnectivityManager.NetworkCallback(){
-            @Override
-            public void onAvailable(@NonNull Network network) {
-                super.onAvailable(network);
-                //alertDialog.dismiss();
-                Log.e(TAG,"Connected "+network.toString());
-                Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onLost(@NonNull Network network) {
-                super.onLost(network);
-                //alertDialog.show();
-                Log.e(TAG,"Not Connected "+network.toString());
-                Toast.makeText(context, "disconnect", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onUnavailable() {
-                super.onUnavailable();
-                Toast.makeText(context, "no network found", Toast.LENGTH_SHORT).show();
-            }
-        };
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        connectivityManager.registerNetworkCallback(networkRequest,networkCallback);
-        /*IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(broadcastReceiver,intentFilter);*/
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        connectivityManager.unregisterNetworkCallback(networkCallback);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        unregisterReceiver(broadcastReceiver);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finishAffinity();
     }
 }

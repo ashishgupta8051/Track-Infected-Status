@@ -18,11 +18,22 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.JsonArray;
 import com.infected.status.adapter.AffectedStateAdapter;
 import com.infected.status.apiclient.APIClient;
+import com.infected.status.apiclient.MySingletonClass;
 import com.infected.status.response.StateWiseResponse;
 import com.infected.status.model.StateName;
+import com.infected.status.utils.InternetCheckService;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,14 +45,17 @@ import static android.view.View.GONE;
 public class AffectedStates extends AppCompatActivity {
     private ProgressBar simpleArcLoader;
     private RecyclerView recyclerView;
-    private List<StateName> arrayList;
+    private List<StateName> arrayList = new ArrayList<>();
     private AffectedStateAdapter affectedStateAdapter;
+    private BroadcastReceiver broadcastReceiver;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_affected_state);
+
+        broadcastReceiver = new InternetCheckService();
 
         getSupportActionBar().setTitle("States");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -53,32 +67,29 @@ public class AffectedStates extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-        getData();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void getData() {
-        Call<StateWiseResponse> call = APIClient.getApiClient().getDataInterface().getStatesName();
-        call.enqueue(new Callback<StateWiseResponse>() {
-            @Override
-            public void onResponse(Call<StateWiseResponse> call, Response<StateWiseResponse> response) {
-                if (response.isSuccessful()){
-                    simpleArcLoader.setVisibility(GONE);
-                    arrayList = response.body().getStateNames();
-                    affectedStateAdapter = new AffectedStateAdapter(arrayList,AffectedStates.this);
-                    recyclerView.setAdapter(affectedStateAdapter);
-                }else {
-                    Toast.makeText(AffectedStates.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //getDataUsingRetrofit();
+        getDataUsingVolley();
+    }
 
-            @Override
-            public void onFailure(Call<StateWiseResponse> call, Throwable t) {
-                simpleArcLoader.setVisibility(GONE);
-                Toast.makeText(AffectedStates.this, "Some thing is wrong !!!", Toast.LENGTH_SHORT).show();
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(broadcastReceiver,intentFilter);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -116,5 +127,78 @@ public class AffectedStates extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void getDataUsingRetrofit() {
+        Call<StateWiseResponse> call = APIClient.getApiClient().getDataInterface().getStatesName();
+        call.enqueue(new Callback<StateWiseResponse>() {
+            @Override
+            public void onResponse(Call<StateWiseResponse> call, Response<StateWiseResponse> response) {
+                if (response.isSuccessful()){
+                    simpleArcLoader.setVisibility(GONE);
+                    arrayList = response.body().getStateNames();
+                    affectedStateAdapter = new AffectedStateAdapter(arrayList,AffectedStates.this);
+                    affectedStateAdapter.notifyDataSetChanged();
+                    recyclerView.setAdapter(affectedStateAdapter);
+                }else {
+                    Toast.makeText(AffectedStates.this, response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StateWiseResponse> call, Throwable t) {
+                simpleArcLoader.setVisibility(GONE);
+                Toast.makeText(AffectedStates.this, "Some thing is wrong !!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getDataUsingVolley() {
+        String url = "https://api.covid19india.org/data.json";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new com.android.volley.Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    arrayList.clear();
+                    JSONArray jsonArray = response.getJSONArray("statewise");
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String active = jsonObject.getString("active");
+                        String confirmed = jsonObject.getString("confirmed");
+                        String deaths = jsonObject.getString("deaths");
+                        String deltaconfirmed = jsonObject.getString("deltaconfirmed");
+                        String deltadeaths = jsonObject.getString("deltadeaths");
+                        String deltarecovered = jsonObject.getString("deltarecovered");
+                        String lastupdatedtime = jsonObject.getString("lastupdatedtime");
+                        String migratedother = jsonObject.getString("migratedother");
+                        String recovered = jsonObject.getString("recovered");
+                        String state = jsonObject.getString("state");
+                        String statecode = jsonObject.getString("statecode");
+                        String statenotes = jsonObject.getString("statenotes");
+                        StateName stateName = new StateName(active,confirmed,deaths,deltaconfirmed,deltadeaths,
+                                deltarecovered,lastupdatedtime,migratedother,recovered,state,statecode,
+                                statenotes);
+                        arrayList.add(stateName);
+                    }
+                    simpleArcLoader.setVisibility(GONE);
+                    affectedStateAdapter = new AffectedStateAdapter(arrayList,AffectedStates.this);
+                    affectedStateAdapter.notifyDataSetChanged();
+                    recyclerView.setAdapter(affectedStateAdapter);
+                } catch (JSONException e) {
+                    simpleArcLoader.setVisibility(GONE);
+                    e.printStackTrace();
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                simpleArcLoader.setVisibility(GONE);
+                Toast.makeText(AffectedStates.this, error.getMessage().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        MySingletonClass.getInstance(this).addToRequestQueue(jsonObjectRequest);
     }
 }

@@ -29,6 +29,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.infected.status.adapter.AffectedCountryAdapter;
 import com.infected.status.apiclient.MySingletonClass;
 import com.infected.status.model.CountryNameModel;
+import com.infected.status.utils.InternetCheckService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,16 +43,14 @@ public class AffectedCountry extends AppCompatActivity {
     private RecyclerView recyclerView;
     public static ArrayList<CountryNameModel> countryNameModelArrayList = new ArrayList<>();
     private AffectedCountryAdapter affectedCountryAdapter;
-    private ConnectivityManager connectivityManager;
-    private ConnectivityManager.NetworkCallback networkCallback;
-    private NetworkRequest networkRequest;
-    private AlertDialog alertDialog;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_affected_country);
 
+        broadcastReceiver = new InternetCheckService();
 
         getSupportActionBar().setTitle("Affected Country");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -71,45 +70,22 @@ public class AffectedCountry extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         fetchData();
-
-        //checkInternetConnection(this);
-    }
-
-    private void checkInternetConnection(final Context context) {
-        connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
-
-        networkRequest = new NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .build();
-
-        networkCallback = new ConnectivityManager.NetworkCallback(){
-            @Override
-            public void onAvailable(@NonNull Network network) {
-                super.onAvailable(network);
-                Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onLost(@NonNull Network network) {
-                super.onLost(network);
-                Toast.makeText(context, "Not Connected", Toast.LENGTH_SHORT).show();
-            }
-        };
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //connectivityManager.registerNetworkCallback(networkRequest,networkCallback);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(broadcastReceiver,intentFilter);
+
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        //connectivityManager.unregisterNetworkCallback(networkCallback);
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -180,6 +156,7 @@ public class AffectedCountry extends AppCompatActivity {
                         countryNameModelArrayList.add(countryNameModel);
                     }
                     affectedCountryAdapter = new AffectedCountryAdapter(countryNameModelArrayList,AffectedCountry.this,Value);
+                    affectedCountryAdapter.notifyDataSetChanged();
                     recyclerView.setAdapter(affectedCountryAdapter);
                     simpleArcLoader.setVisibility(View.GONE);
                 } catch (JSONException e) {

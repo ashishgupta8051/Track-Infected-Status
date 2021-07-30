@@ -12,26 +12,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_icon_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Covid19Tracker"
-        android:hardwareAccelerated="true">
-        <activity android:name="com.infected.status.StateCovidInformation"
-            android:hardwareAccelerated="true"/>
-        <activity android:name="com.infected.status.AffectedStates"
-            android:hardwareAccelerated="true"/>
-        <activity android:name="com.infected.status.CountryCovidInformation"
-            android:hardwareAccelerated="true"/>
-        <activity android:name="com.infected.status.AffectedCountry"
-            android:hardwareAccelerated="true"/>
+        android:theme="@style/Theme.Covid19Tracker">
+        <activity android:name="com.infected.status.StateCovidInformation" />
+        <activity android:name="com.infected.status.AffectedStates" />
+        <activity android:name="com.infected.status.CountryCovidInformation" />
+        <activity android:name="com.infected.status.AffectedCountry" />
 
-        <activity android:name="com.infected.status.MainActivity"
-            android:hardwareAccelerated="true">
+        <activity android:name="com.infected.status.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
     </application>
 

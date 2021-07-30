@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.infected.status.utils.InternetCheckService;
+
 import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.PieModel;
 
@@ -19,11 +21,14 @@ public class StateCovidInformation extends AppCompatActivity {
     private TextView totalCasesTxt,state,activeCasesTxt,death,recovered,lastUpdateTime;
     private PieChart pieChart;
     private String stateName,totalCases,activeCases,deaths,recovere,updatedTime;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_state_covid_information);
+
+        broadcastReceiver = new InternetCheckService();
 
         getSupportActionBar().setTitle("India Covid Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -73,6 +78,21 @@ public class StateCovidInformation extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(),AffectedStates.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(broadcastReceiver,intentFilter);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(broadcastReceiver);
     }
 
 }
