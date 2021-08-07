@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.infected.status.adapter.AffectedCountryAdapter;
 import com.infected.status.apiclient.MySingletonClass;
 import com.infected.status.model.CountryNameModel;
+import com.infected.status.utils.CountryClickListener;
 import com.infected.status.utils.InternetCheckService;
 
 import org.json.JSONArray;
@@ -37,7 +39,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class AffectedCountry extends AppCompatActivity {
+public class AffectedCountry extends AppCompatActivity implements CountryClickListener {
     private String Value;
     private ProgressBar simpleArcLoader;
     private RecyclerView recyclerView;
@@ -118,17 +120,11 @@ public class AffectedCountry extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-     @Override
-    public void onBackPressed() {
-         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-         startActivity(intent);
-    }
-
     private void fetchData() {
         String url = "https://disease.sh/v3/covid-19/countries/";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(JSONArray jsonArray) {
                 try {
@@ -155,9 +151,9 @@ public class AffectedCountry extends AppCompatActivity {
                         CountryNameModel countryNameModel = new CountryNameModel(flag,country,cases,todayCases,deaths,todayDeaths,recovered,todayRecovered,active,critical,tests,population);
                         countryNameModelArrayList.add(countryNameModel);
                     }
-                    affectedCountryAdapter = new AffectedCountryAdapter(countryNameModelArrayList,AffectedCountry.this,Value);
-                    affectedCountryAdapter.notifyDataSetChanged();
+                    affectedCountryAdapter = new AffectedCountryAdapter(countryNameModelArrayList,AffectedCountry.this,Value,AffectedCountry.this);
                     recyclerView.setAdapter(affectedCountryAdapter);
+                    affectedCountryAdapter.notifyDataSetChanged();
                     simpleArcLoader.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -173,5 +169,24 @@ public class AffectedCountry extends AppCompatActivity {
         });
 
         MySingletonClass.getInstance(AffectedCountry.this).addToRequestQueue(jsonArrayRequest);
+    }
+
+
+    @Override
+    public void onClickedTvShow(CountryNameModel countryNameModel) {
+        Intent intent = new Intent(this, CountryCovidInformation.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("country", countryNameModel.getCountry());
+        intent.putExtra("cases", countryNameModel.getCases());
+        intent.putExtra("TodayCases", countryNameModel.getTodayCases());
+        intent.putExtra("death", countryNameModel.getDeaths());
+        intent.putExtra("TodayDeath", countryNameModel.getTodayDeaths());
+        intent.putExtra("recovered", countryNameModel.getRecovered());
+        intent.putExtra("TodayRecovered", countryNameModel.getTodayRecovered());
+        intent.putExtra("active", countryNameModel.getActive());
+        intent.putExtra("critical", countryNameModel.getCritical());
+        intent.putExtra("tests", countryNameModel.getTests());
+        intent.putExtra("population", countryNameModel.getPopulation());
+        startActivity(intent);
     }
 }

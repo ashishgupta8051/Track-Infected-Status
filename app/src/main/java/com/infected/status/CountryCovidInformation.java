@@ -91,15 +91,6 @@ public class CountryCovidInformation extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), AffectedCountry.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //intent.putExtra("Value",Value);
-        startActivity(intent);
-        //finish();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter();

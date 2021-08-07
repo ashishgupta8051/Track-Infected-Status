@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.infected.status.CountryCovidInformation;
 import com.infected.status.R;
 import com.infected.status.model.CountryNameModel;
+import com.infected.status.utils.CountryClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,11 +27,13 @@ public class AffectedCountryAdapter extends RecyclerView.Adapter<AffectedCountry
     private List<CountryNameModel> countryNameModelListFilter;
     private Activity activity;
     private String value;
+    private CountryClickListener listener;
 
-    public AffectedCountryAdapter(List<CountryNameModel> countryNameModelList, Activity activity, String value) {
+    public AffectedCountryAdapter(List<CountryNameModel> countryNameModelList, Activity activity, String value, CountryClickListener listener) {
         this.countryNameModelList = countryNameModelList;
         this.activity = activity;
         this.value = value;
+        this.listener = listener;
         countryNameModelListFilter = countryNameModelList;
     }
 
@@ -39,6 +42,12 @@ public class AffectedCountryAdapter extends RecyclerView.Adapter<AffectedCountry
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.country_list,parent,false);
         Holder holder = new Holder(view);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClickedTvShow(countryNameModelListFilter.get(holder.getAdapterPosition()));
+            }
+        });
         return holder;
     }
 
@@ -47,26 +56,6 @@ public class AffectedCountryAdapter extends RecyclerView.Adapter<AffectedCountry
         CountryNameModel countryNameModel = countryNameModelListFilter.get(position);
         Picasso.get().load(countryNameModel.getFlag()).fit().into(holder.flagImg);
         holder.countryNameTxt.setText(countryNameModel.getCountry());
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(activity, CountryCovidInformation.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("country", countryNameModel.getCountry());
-                intent.putExtra("cases", countryNameModel.getCases());
-                intent.putExtra("TodayCases", countryNameModel.getTodayCases());
-                intent.putExtra("death", countryNameModel.getDeaths());
-                intent.putExtra("TodayDeath", countryNameModel.getTodayDeaths());
-                intent.putExtra("recovered", countryNameModel.getRecovered());
-                intent.putExtra("TodayRecovered", countryNameModel.getTodayRecovered());
-                intent.putExtra("active", countryNameModel.getActive());
-                intent.putExtra("critical", countryNameModel.getCritical());
-                intent.putExtra("tests", countryNameModel.getTests());
-                intent.putExtra("population", countryNameModel.getPopulation());
-                activity.startActivity(intent);
-            }
-        });
     }
 
     @Override
