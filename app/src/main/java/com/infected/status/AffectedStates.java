@@ -6,12 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -40,6 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.ContentValues.TAG;
 import static android.view.View.GONE;
 
 public class AffectedStates extends AppCompatActivity {
@@ -158,6 +161,7 @@ public class AffectedStates extends AppCompatActivity {
         String url = "https://api.covid19india.org/data.json";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new com.android.volley.Response.Listener<JSONObject>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -195,7 +199,7 @@ public class AffectedStates extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 simpleArcLoader.setVisibility(GONE);
-                Toast.makeText(AffectedStates.this, error.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(AffectedStates.this, error.getMessage().toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
