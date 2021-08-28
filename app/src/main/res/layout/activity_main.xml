@@ -13,9 +13,10 @@
         android:scrollbars="none">
 
         <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -43,7 +44,10 @@
                         android:layout_marginTop="15dp"
                         android:layout_marginLeft="15dp"
                         android:layout_marginBottom="15dp"
-                        />
+                        >
+
+                    </org.eazegraph.lib.charts.PieChart>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -144,9 +148,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="visible"
-                        android:id="@+id/linearLayout">
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -229,13 +231,13 @@
                                 android:layout_alignParentRight="true"
                                 android:gravity="end" />
                         </RelativeLayout>
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="@color/color_two"
                             android:layout_marginLeft="15dp"
                             android:layout_marginRight="15dp"
-                            />
+                            android:background="@color/color_two" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -356,18 +358,19 @@
                                 android:fontFamily="sans-serif-light"
                                 android:text="@string/recovered_txt"
                                 android:textSize="18sp"/>
+
                             <TextView
+                                android:id="@+id/recover"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/zero_txt"
-                                android:id="@+id/recover"
-                                android:textAlignment="textEnd"
-                                android:textSize="18sp"
-                                android:textColor="@color/color_one"
-                                android:textStyle="bold"
-                                android:fontFamily="sans-serif-light"
                                 android:layout_alignParentRight="true"
-                                android:gravity="end" />
+                                android:fontFamily="sans-serif-light"
+                                android:gravity="end"
+                                android:text="@string/zero_txt"
+                                android:textAlignment="textEnd"
+                                android:textColor="@color/color_one"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
                         </RelativeLayout>
                         <View
                             android:layout_width="match_parent"
@@ -589,16 +592,6 @@
 
                     </LinearLayout>
 
-                    <ProgressBar
-                        android:visibility="visible"
-                        android:id="@+id/loader"
-                        android:layout_centerInParent="true"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:indeterminateTint="@color/colorPrimary"
-                        >
-                    </ProgressBar>
-
                 </RelativeLayout>
 
             </androidx.cardview.widget.CardView>
@@ -632,5 +625,12 @@
 
     </ScrollView>
 
+    <ProgressBar
+        android:id="@+id/loader"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/colorPrimary"
+        android:visibility="visible" />
 
 </RelativeLayout>

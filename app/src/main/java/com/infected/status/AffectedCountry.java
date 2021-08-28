@@ -30,6 +30,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.infected.status.adapter.AffectedCountryAdapter;
 import com.infected.status.apiclient.MySingletonClass;
 import com.infected.status.model.CountryNameModel;
+import com.infected.status.utils.Constants;
 import com.infected.status.utils.CountryClickListener;
 import com.infected.status.utils.InternetCheckService;
 
@@ -38,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AffectedCountry extends AppCompatActivity implements CountryClickListener {
     private String Value;
@@ -52,27 +54,7 @@ public class AffectedCountry extends AppCompatActivity implements CountryClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_affected_country);
 
-        broadcastReceiver = new InternetCheckService();
-
-        getSupportActionBar().setTitle("Affected Country");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        //Value = getIntent().getExtras().get("Value").toString();
-
-        recyclerView = findViewById(R.id.affectedCountryRecycler);
-        simpleArcLoader = findViewById(R.id.loader2);
-
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AffectedCountry.this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        fetchData();
+        setUpUi();
     }
 
     @Override
@@ -120,62 +102,10 @@ public class AffectedCountry extends AppCompatActivity implements CountryClickLi
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchData() {
-        String url = "https://disease.sh/v3/covid-19/countries/";
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onResponse(JSONArray jsonArray) {
-                try {
-                    countryNameModelArrayList.clear();
-                    for (int i = 0; i < jsonArray.length(); i++){
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        JSONObject jsonObject1 = jsonObject.getJSONObject("countryInfo");
-
-                        String flag,country,cases,todayCases,deaths,todayDeaths,recovered,todayRecovered,active,critical,tests,population;
-
-                        flag = jsonObject1.getString("flag");
-                        country = jsonObject.getString("country");
-                        cases = jsonObject.getString("cases");
-                        todayCases = jsonObject.getString("todayCases");
-                        deaths = jsonObject.getString("deaths");
-                        todayDeaths = jsonObject.getString("todayDeaths");
-                        recovered = jsonObject.getString("recovered");
-                        todayRecovered = jsonObject.getString("todayRecovered");
-                        active = jsonObject.getString("active");
-                        critical = jsonObject.getString("critical");
-                        tests = jsonObject.getString("tests");
-                        population = jsonObject.getString("population");
-
-                        CountryNameModel countryNameModel = new CountryNameModel(flag,country,cases,todayCases,deaths,todayDeaths,recovered,todayRecovered,active,critical,tests,population);
-                        countryNameModelArrayList.add(countryNameModel);
-                    }
-                    affectedCountryAdapter = new AffectedCountryAdapter(countryNameModelArrayList,AffectedCountry.this,Value,AffectedCountry.this);
-                    recyclerView.setAdapter(affectedCountryAdapter);
-                    affectedCountryAdapter.notifyDataSetChanged();
-                    simpleArcLoader.setVisibility(View.GONE);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    simpleArcLoader.setVisibility(View.GONE);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(AffectedCountry.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                simpleArcLoader.setVisibility(View.GONE);
-            }
-        });
-
-        MySingletonClass.getInstance(AffectedCountry.this).addToRequestQueue(jsonArrayRequest);
-    }
-
-
     @Override
     public void onClickedTvShow(CountryNameModel countryNameModel) {
         Intent intent = new Intent(this, CountryCovidInformation.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("country", countryNameModel.getCountry());
         intent.putExtra("cases", countryNameModel.getCases());
         intent.putExtra("TodayCases", countryNameModel.getTodayCases());
@@ -188,5 +118,64 @@ public class AffectedCountry extends AppCompatActivity implements CountryClickLi
         intent.putExtra("tests", countryNameModel.getTests());
         intent.putExtra("population", countryNameModel.getPopulation());
         startActivity(intent);
+    }
+
+    private void setUpUi() {
+        broadcastReceiver = new InternetCheckService();
+
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Affected Country");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        recyclerView = findViewById(R.id.affectedCountryRecycler);
+        simpleArcLoader = findViewById(R.id.loader2);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AffectedCountry.this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        fetchData();
+    }
+
+    private void fetchData() {
+
+        @SuppressLint("NotifyDataSetChanged") JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, Constants.COUNTRIES,null, jsonArray -> {
+            try {
+                countryNameModelArrayList.clear();
+                for (int i = 0; i < jsonArray.length(); i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject jsonObject1 = jsonObject.getJSONObject("countryInfo");
+
+                    String flag,country,cases,todayCases,deaths,todayDeaths,recovered,todayRecovered,active,critical,tests,population;
+
+                    flag = jsonObject1.getString("flag");
+                    country = jsonObject.getString("country");
+                    cases = jsonObject.getString("cases");
+                    todayCases = jsonObject.getString("todayCases");
+                    deaths = jsonObject.getString("deaths");
+                    todayDeaths = jsonObject.getString("todayDeaths");
+                    recovered = jsonObject.getString("recovered");
+                    todayRecovered = jsonObject.getString("todayRecovered");
+                    active = jsonObject.getString("active");
+                    critical = jsonObject.getString("critical");
+                    tests = jsonObject.getString("tests");
+                    population = jsonObject.getString("population");
+
+                    CountryNameModel countryNameModel = new CountryNameModel(flag,country,cases,todayCases,deaths,todayDeaths,recovered,todayRecovered,active,critical,tests,population);
+                    countryNameModelArrayList.add(countryNameModel);
+                }
+                affectedCountryAdapter = new AffectedCountryAdapter(countryNameModelArrayList,AffectedCountry.this,Value,AffectedCountry.this);
+                recyclerView.setAdapter(affectedCountryAdapter);
+                affectedCountryAdapter.notifyDataSetChanged();
+                simpleArcLoader.setVisibility(View.GONE);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                simpleArcLoader.setVisibility(View.GONE);
+            }
+        }, error -> {
+            Toast.makeText(AffectedCountry.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            simpleArcLoader.setVisibility(View.GONE);
+        });
+
+        MySingletonClass.getInstance(AffectedCountry.this).addToRequestQueue(jsonArrayRequest);
     }
 }

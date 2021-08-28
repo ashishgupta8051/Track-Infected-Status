@@ -1,5 +1,6 @@
 package com.infected.status.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.infected.status.R;
 import com.infected.status.StateCovidInformation;
 import com.infected.status.model.StateName;
+import com.infected.status.utils.StateClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +26,13 @@ public class AffectedStateAdapter extends RecyclerView.Adapter<AffectedStateAdap
     private List<StateName> stateNameList;
     private List<StateName> filterStateNameList;
     private Activity activity;
+    private StateClickListener stateClickListener;
 
-    public AffectedStateAdapter(List<StateName> stateNameList,Activity activity) {
+    public AffectedStateAdapter(List<StateName> stateNameList,Activity activity,StateClickListener stateClickListener) {
         this.stateNameList = stateNameList;
         filterStateNameList = stateNameList;
         this.activity = activity;
+        this.stateClickListener = stateClickListener;
     }
 
     @NonNull
@@ -36,28 +40,20 @@ public class AffectedStateAdapter extends RecyclerView.Adapter<AffectedStateAdap
     public StateHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.state_list,parent,false);
         StateHolder stateHolder = new StateHolder(view);
+        stateHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stateClickListener.onClickListener(stateNameList.get(stateHolder.getAdapterPosition()));
+            }
+        });
         return stateHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull StateHolder holder, int position) {
+    public void onBindViewHolder(@NonNull StateHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.stateNameTxt.setText(filterStateNameList.get(position).getState());
         holder.itemCountTxt.setText(position + 1 + ".");
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(activity, StateCovidInformation.class);
-                intent.putExtra("state",filterStateNameList.get(position).getState());
-                intent.putExtra("totalCases",filterStateNameList.get(position).getConfirmed());
-                intent.putExtra("active",filterStateNameList.get(position).getActive());
-                intent.putExtra("death",filterStateNameList.get(position).getDeaths());
-                intent.putExtra("recovered",filterStateNameList.get(position).getRecovered());
-                intent.putExtra("time",filterStateNameList.get(position).getLastupdatedtime());
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                activity.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -87,6 +83,7 @@ public class AffectedStateAdapter extends RecyclerView.Adapter<AffectedStateAdap
                 return filterResults;
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 filterStateNameList = (ArrayList<StateName>) results.values;
