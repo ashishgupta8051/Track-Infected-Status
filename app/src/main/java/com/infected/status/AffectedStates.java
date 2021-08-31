@@ -100,12 +100,6 @@ public class AffectedStates extends AppCompatActivity implements StateClickListe
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
     public void onClickListener(StateName stateName) {
         Intent intent = new Intent(getApplicationContext(), StateCovidInformation.class);
         intent.putExtra("state",stateName.getState());
