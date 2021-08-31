@@ -8,11 +8,11 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.infected.status"
+        applicationId "com.coronainfected.status"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 11
-        versionName "11.1"
+        versionCode 1
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
