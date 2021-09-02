@@ -1,6 +1,6 @@
 <resources>
     //App name
-    <string name="app_name">Track Infected Status</string>
+    <string name="app_name">Infected Status</string>
 
     <string name="empty_txt" />
 

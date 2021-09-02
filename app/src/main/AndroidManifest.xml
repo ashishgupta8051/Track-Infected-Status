@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.coronainfected.status">
+    package="com.tracked.infectedstatus">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -13,12 +13,12 @@
         android:roundIcon="@mipmap/app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Covid19Tracker">
-        <activity android:name="com.coronainfected.status.StateCovidInformation" />
-        <activity android:name="com.coronainfected.status.AffectedStates" />
-        <activity android:name="com.coronainfected.status.CountryCovidInformation" />
-        <activity android:name="com.coronainfected.status.AffectedCountry" />
+        <activity android:name="com.tracked.infectedstatus.StateCovidInformation" />
+        <activity android:name="com.tracked.infectedstatus.AffectedStates" />
+        <activity android:name="com.tracked.infectedstatus.CountryCovidInformation" />
+        <activity android:name="com.tracked.infectedstatus.AffectedCountry" />
 
-        <activity android:name="com.coronainfected.status.MainActivity">
+        <activity android:name="com.tracked.infectedstatus.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

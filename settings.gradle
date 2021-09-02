@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "Track Infected Status"
+rootProject.name = "Infected Status"
